@@ -205,14 +205,14 @@ def show_sendungen_thema( params):
 def show_sendung( params):
     sendid = params.get( PARAMETER_KEY_ID)
     urlParam = params.get( PARAMETER_KEY_URL)
-    url = BASE_URL + getUrlWithoutParams( urlParam)
-    soup = BeautifulSoup( fetchHttp( url, {"id": sendid}))
-
+    url = BASE_URL + "/play/tv/episodesfromshow"
+    soup = BeautifulSoup( fetchHttp( url, {"id": sendid, "pageNumber":1}))
     for show in soup.findAll( "li", "sendung_item"):
         title = show.find( "h3", "title").text
         titleDate = show.find( "div", "title_date").text
         image = getUrlWithoutParams( show.find( "img")['src'])
-        a = show.find( "a")
+        wrapper = show.find( "div", "title_contributions_wrapper")
+        a = wrapper.find("a")
         id = getIdFromUrl( a['href'])
         addDirectoryItem( ITEM_TYPE_VIDEO, title + " " + titleDate, {PARAMETER_KEY_MODE: MODE_PLAY, PARAMETER_KEY_ID: id }, image)
 
